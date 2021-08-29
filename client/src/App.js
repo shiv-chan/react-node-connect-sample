@@ -7,7 +7,7 @@ function App() {
 	const [name, setName] = useState('');
 	const [country, setCountry] = useState('');
 	const [studentsData, setstudentsData] = useState([]);
-	const [isUpdated, setIsUpdated] = useState(false);
+	const [updateFlag, setUpdateFlag] = useState(false);
 
 	const callAPI = async () => {
 		try {
@@ -21,7 +21,7 @@ function App() {
 
 	useEffect(() => {
 		callAPI();
-	}, [isUpdated]);
+	}, [updateFlag]);
 
 	const postNewStudentData = async (e) => {
 		e.preventDefault();
@@ -32,7 +32,7 @@ function App() {
 				name,
 				country,
 			});
-			setIsUpdated((prevState) => !prevState);
+			setUpdateFlag((prevState) => !prevState);
 		} catch (err) {
 			console.error(err);
 		}
@@ -40,8 +40,6 @@ function App() {
 		setName('');
 		setCountry('');
 	};
-
-	console.log(`isUpdated: ${isUpdated}`);
 
 	return (
 		<div className="App">

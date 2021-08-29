@@ -46,6 +46,8 @@ app.post('/post-new-student-data', async (req, res) => {
 			);
 		}
 	);
+
+	res.redirect('/home');
 });
 
 // create a routing with the get HTTP request method to respond to a client request
