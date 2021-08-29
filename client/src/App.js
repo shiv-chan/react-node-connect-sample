@@ -2,47 +2,53 @@ import './App.css';
 import logo from './logo.svg';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
 function App() {
 	const [name, setName] = useState('');
 	const [country, setCountry] = useState('');
 	const [studentsData, setstudentsData] = useState([]);
 	const [isUpdated, setIsUpdated] = useState(false);
 
-	const callAPI = async () => {
-		try {
-			const res = await axios.get('http://localhost:4000/home');
-			setstudentsData(res.data);
-			console.log(res.data);
-		} catch (err) {
-			console.error(`Error occured: ${err}`);
-		}
-	};
-
 	useEffect(() => {
+		setIsUpdated(false);
+		const callAPI = async () => {
+			try {
+				const res = await axios.get('/home');
+				setstudentsData(res.data);
+				console.log(res.data);
+			} catch (err) {
+				console.error(`Error occured: ${err}`);
+			}
+		};
 		callAPI();
-	}, [isUpdated]);
+	}, []);
 
 	const postNewStudentData = async (e) => {
 		e.preventDefault();
-
 		try {
-			await axios.post('http://localhost:4000/post-new-student-data', {
-				id: `${Math.random()}`,
-				name,
-				country,
-			});
-			setIsUpdated((prevState) => !prevState);
+			await axios.post(
+				'/post-new-student-data',
+				{
+					name: name,
+					country: country,
+				},
+				{
+					headers: {
+						// It indicates that the request body format is JSON.
+						'Content-Type': 'application/json',
+					},
+				}
+			);
 		} catch (err) {
-			console.error(err);
+			console.log(err);
 		}
-
 		setName('');
 		setCountry('');
+		setIsUpdated(true);
 	};
 
-	console.log(`isUpdated: ${isUpdated}`);
-
+	const updateData = () => {
+		window.location.reload();
+	};
 	return (
 		<div className="App">
 			<header className="App-header">
@@ -61,13 +67,23 @@ function App() {
 					<button type="submit">Add Student</button>
 				</form>
 				<div>
-					{studentsData.map((student) => (
-						<div key={student.id}>
-							<p>
-								Name: {student.name} | Country: {student.country}
-							</p>
-						</div>
-					))}
+					{studentsData.length !== 0 && !isUpdated ? (
+						studentsData.map((student, index) => {
+							return (
+								<div key={index}>
+									<p>
+										Name: {student.name} | Country: {student.country}
+									</p>
+									<p></p>
+								</div>
+							);
+						})
+					) : (
+						<>
+							<p>new student data added!</p>
+							<button onClick={() => updateData()}>Update List</button>
+						</>
+					)}
 				</div>
 			</header>
 		</div>

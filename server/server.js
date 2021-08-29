@@ -33,18 +33,19 @@ app.post('/post-new-student-data', async (req, res) => {
 			if (err) throw err;
 			const updatedStudentsData = JSON.parse(currentData);
 			updatedStudentsData.push(newStudentData);
-			fs.writeFile(
+			fs.writeFileSync(
 				path.join(__dirname, 'data', 'students.json'),
 				// JSON.stringify() JS Object → json string
 				JSON.stringify(updatedStudentsData),
+
 				(err) => {
 					if (err) throw err;
-					console.log(
-						`new student data added! Name: ${newStudentData.name} Country: ${newStudentData.country}`
-					);
 				}
 			);
 		}
+	);
+	console.log(
+		`new student data added! Name: ${newStudentData.name} Country: ${newStudentData.country}`
 	);
 });
 
