@@ -7,13 +7,11 @@ function App() {
 	const [name, setName] = useState('');
 	const [country, setCountry] = useState('');
 	const [studentsData, setstudentsData] = useState([]);
-	const [updateFlag, setUpdateFlag] = useState(false);
 
 	const callAPI = async () => {
 		try {
 			const res = await axios.get('http://localhost:4000/home');
 			setstudentsData(res.data);
-			console.log(res.data);
 		} catch (err) {
 			console.error(`Error occured: ${err}`);
 		}
@@ -21,7 +19,7 @@ function App() {
 
 	useEffect(() => {
 		callAPI();
-	}, [updateFlag]);
+	}, []);
 
 	const postNewStudentData = async (e) => {
 		e.preventDefault();
@@ -32,7 +30,7 @@ function App() {
 				name,
 				country,
 			});
-			setUpdateFlag((prevState) => !prevState);
+			callAPI();
 		} catch (err) {
 			console.error(err);
 		}
